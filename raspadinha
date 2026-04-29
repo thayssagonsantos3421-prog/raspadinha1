@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Raspadinha</title>
+
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #ffffff;
+  font-family: Arial;
+}
+
+#container {
+  position: relative;
+  width: 320px;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#premio {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #800020; /* marsala */
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style>
+</head>
+
+<body>
+
+<div id="container">
+  <div id="premio">🎉 Você ganhou 10% de desconto! 🎉</div>
+  <canvas id="raspadinha"></canvas>
+</div>
+
+<script>
+const canvas = document.getElementById("raspadinha");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 320;
+canvas.height = 180;
+
+// camada de raspagem (branca)
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+let raspando = false;
+
+// mouse
+canvas.addEventListener("mousedown", () => raspando = true);
+canvas.addEventListener("mouseup", () => raspando = false);
+
+canvas.addEventListener("mousemove", (e) => {
+  if (!raspando) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  raspar(x, y);
+});
+
+// celular
+canvas.addEventListener("touchstart", () => raspando = true);
+canvas.addEventListener("touchend", () => raspando = false);
+
+canvas.addEventListener("touchmove", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left;
+  const y = e.touches[0].clientY - rect.top;
+
+  raspar(x, y);
+});
+
+function raspar(x, y) {
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath();
+  ctx.arc(x, y, 20, 0, Math.PI * 2);
+  ctx.fill();
+}
+</script>
+
+</body>
+</html>
